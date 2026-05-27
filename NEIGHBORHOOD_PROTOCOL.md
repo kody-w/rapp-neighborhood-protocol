@@ -39,19 +39,21 @@ identity of the system — the thing an adopter cannot unsee.
 
 ## §2 — The Kite Mark (signature visual — the IP)
 
-When a vTwin is **actively kited**, it shows the **kite mark**: the **Microsoft four‑colour logo
-turned on its point and stretched at the bottom into a real kite.** This is the canonical sign
-that a neighborhood is being hosted — *scan to join.* It is the face of the RAPP neighborhood.
+When a vTwin is **actively kited**, it shows the **kite mark**: a **four‑panel diamond turned on its
+point and stretched at the bottom into a real kite** — a **neutral, fully‑ownable** mark with no
+third‑party branding. This is the canonical sign that a neighborhood is being hosted — *scan to join.*
+It is the face of the RAPP neighborhood.
 
-- **Four panels, on point:** **red** upper‑left `#F25022`, **green** upper‑right `#7FBA00`,
-  **blue** lower‑left `#00A4EF`, **yellow** lower‑right `#FFB900` — the two **lower** panels
+- **Four panels, on point** (neutral earth tones): **clay** upper‑left `#e07a5f`, **sage** upper‑right
+  `#81b29a`, **slate** lower‑left `#3d5a80`, **sand** lower‑right `#f2cc8f` — the two **lower** panels
   **stretched** so the bottom comes to a long point (a kite, not a diamond).
 - **White spars** (the cross) + a white outline; a **bow‑tie tail** trails from the bottom point.
 - It **sways** gently (≈ ±7°, ~3.4 s) like a kite in wind.
 
 **Reference geometry** (`viewBox 0 0 100 134`): corners **T** `50,6` · **L** `10,40` ·
 **R** `90,40` · **B** `50,98`; spars cross at `50,40`; tail + three bow‑ties below **B**.
-The logo→kite transform (turn on point, stretch the bottom two panels, add tail) **is** the animation.
+The diamond→kite transform (turn on point, stretch the bottom two panels, add tail) **is** the animation.
+Canonical SVG: **[rapp‑kited‑twin](https://github.com/kody-w/rapp-kited-twin)** — neutral, no third‑party logo.
 
 ---
 
