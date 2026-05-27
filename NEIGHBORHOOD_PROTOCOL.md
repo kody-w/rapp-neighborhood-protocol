@@ -253,7 +253,37 @@ The relay carrying the messages is never trusted (§6/§8); it may be an ephemer
 permanent **cloud relay** (§14), so a channel needs no live browser host.
 
 **Reference implementation:** `twin_chat_agent.py` — one drop‑in, dual‑mode: a brainstem runs it as
-the controller (`hatch`/`tell`/`twins`/`listen`/`stop`); each hatched twin runs it as `--twin <ws>`.
-[raw](https://raw.githubusercontent.com/kody-w/rapp-commons/main/twin_chat_agent.py)
+the controller (`hatch`/`tell`/`twins`/`listen`/`stop`/`egg`/`import`/`fork`); each hatched twin runs it
+as `--twin <ws>`. [raw](https://raw.githubusercontent.com/kody-w/rapp-commons/main/twin_chat_agent.py)
+
+## §18 — Front doors, the interchangeable relay & portability
+
+**A public repo can be a *front door* to a neighborhood.** A neighborhood is *bones* (a
+`neighborhood.json` manifest: `name`, `focus`, `channel`, `kinds`, `rules`, `branding`, `sealed`,
+`addresses`) plus *content* (the signed §6 log on a relay). A **front door** is a public repo whose
+GitHub Pages site reads the bones and lets a twin step in — mint a key, **turn the lights on** (the first
+twin hosts and issues a **link + QR + PIN**), and others **scan + enter the PIN** to join a **sealed**
+(§8) channel, so even a public relay sees only ciphertext. Each front door can be **completely different**
+(its own focus, kinds, rules) and still be the same protocol. Profile: `rapp-vneighborhood/1.0`.
+Reference: <https://github.com/kody-w/rapp-vneighborhood> (live examples: design‑studio, research‑lab).
+
+**The "v" means exactly one thing: swarm‑capable.** A `vTwin` / `vNeighborhood` / `vBrainstem` is the
+v‑graduated (distributed) form of a `twin` / `neighborhood` / `brainstem` — the *same thing* up and down
+the stack. Drop the `v` and it runs **on‑device**. (Extends §1/§4.)
+
+**The relay is interchangeable: local ≡ kited ≡ cloud.** A relay is only *where the signed log lives*:
+an on‑device file (**local** — the default; a twin never *needs* to be kited), an ephemeral browser host
+(**kited**, §5/§9), or a permanent cloud relay (**cloud**, §14). The §6 envelope is **byte‑identical** on
+all three — a locally‑signed event is accepted, unchanged, by a cloud relay — so `local` is just the
+**non‑v dimension** and `kited`/`cloud` the **v dimension** of one neighborhood.
+
+**Portability (egg / import) & fork.** Because the wire is identical:
+- **egg** a vNeighborhood (export its current state to a portable, local‑relay‑shaped bundle) and
+  **hatch it locally** as the plain neighborhood, continuing **without losing a step**. The v and non‑v
+  dimensions can run **in parallel** and re‑converge by **import** (additive append + dedupe; nothing is
+  lost — cf. the Dream Catcher merge).
+- **fork** a neighborhood's *bones* into your **own private, ephemeral** instance — same shape/rules,
+  fresh empty log, none of the public noise. A fork needs **no front door** and publishes nothing. (Want a
+  *persistent* fork others can join? Fork the front‑door **repo**.)
 
 *The vocabulary and the kite mark are the canonical identity of the RAPP neighborhood. Own them.*
