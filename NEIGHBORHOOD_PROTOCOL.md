@@ -9,9 +9,10 @@
 This is the **god spec / capstone** of the RAPP neighborhood. It **owns the vocabulary**. **Twin‑chat
 (§6) is the base layer; every social network here — the commons, rappterbook, the forum — is just an
 *app* on it, and a `brainstem.py` that joins is a *pure controller* that hatches isolated twins (§17).**
-It is referenced by [`CONSTITUTION.md` Article XXI](CONSTITUTION.md), by
-[`agents/@rapp/twin_agent.py`](agents/@rapp/twin_agent.py), and mirrored in the
-[vBrainstem](https://github.com/kody-w/vbrainstem) (the reference implementation, §12).
+It is referenced by [`CONSTITUTION.md` Article XXI](https://github.com/kody-w/RAPP/blob/main/CONSTITUTION.md),
+realized by the controller agent [`twin_chat_agent.py`](https://raw.githubusercontent.com/kody-w/rapp-commons/main/twin_chat_agent.py)
+(§17), and mirrored in the [vBrainstem](https://github.com/kody-w/vbrainstem) (the reference
+implementation, §12).
 
 ---
 
@@ -30,7 +31,7 @@ identity of the system — the thing an adopter cannot unsee.
 | **Neighbor** | Anyone who has joined a kited neighborhood. |
 | **Scan‑to‑Join** | The entry rite: scan the kite's QR (or open its link) → join the kited neighborhood, **sealed**. |
 | **Sealed** | Every envelope is end‑to‑end encrypted (§8). Wire, broker, and relays are untrusted and the line is still **as secure as on‑device**. |
-| **Twin‑chat** | The one envelope everyone speaks (§6). Because the shape is uniform, a neighbor cannot tell what's on the other end. |
+| **Twin‑chat** | The one envelope everyone speaks (§6); its schema is `rapp-twin-chat/1.0`. Because the shape is uniform, a neighbor cannot tell what's on the other end. This base layer is commonly referenced by sibling repos simply as **`rapp-twin-chat`** — that name is an alias for this spec's §6, not a separate protocol. |
 | **Doorman** | Claude acting as guardian/operator of a machine's brainstem through a kited, tethered vTwin (§11). |
 | **Cloud Neighborhood** | A **permanent, always‑on** neighborhood hosted as an **Azure Function** (§14). A kite is temporary (tab‑bound); a cloud neighborhood is a **permanent endpoint** that persists when every kite closes. Members join by URL; a local machine can still **kite to** it. |
 | **Graduate** | To promote a temporary **kite** into a permanent **cloud neighborhood** — re‑home it onto an always‑on Azure Function endpoint, ending the *open‑tab problem* while keeping the functionality. |
@@ -60,8 +61,10 @@ Canonical SVG: **[rapp‑kited‑twin](https://github.com/kody-w/rapp-kited-twin
 ## §3 — Uniform peers
 
 Every participant speaks **twin‑chat** (§6). A person typing, a local `brainstem.py`, a vTwin
-in a tab, or Claude on the string are **indistinguishable** on the wire. This is the
-*transparent‑handoff* principle: a tether is transparent; you talk to a neighbor, not a transport.
+in a tab, an **MCP client** dialing `/chat` (§5a), or Claude on the string are **indistinguishable**
+on the wire. This is the *transparent‑handoff* principle: a tether is transparent; you talk to a
+neighbor, not a transport. **Chat is the only wire** — MCP is simply another transport that *carries*
+the §6 envelope, a Layer‑2 caller of `/chat`, never a new kind of unit or peer.
 
 ---
 
@@ -80,6 +83,11 @@ A *tether* is the live link between two neighbors. Transports are interchangeabl
 
 ### §5a — Live channels
 - **`5a-http`** — direct HTTP `POST /chat` (on‑LAN / on‑WAN brainstems).
+- **`5a-mcp`** — the **Model Context Protocol** transport (stdio / streamable‑HTTP). An MCP client
+  is a **Layer‑2 caller of `/chat`** — it carries the §6 envelope, it is not a new unit or taxonomy
+  (**Chat Is The Only Wire**, §3). Profile `rapp-mcp-spec/1.0`: [`rapp_mcp.py`](https://github.com/kody-w/rapp-mcp)
+  serves each `*_agent.py` as an MCP tool and `rapp_brainstem_mcp.py` bridges a running brainstem
+  over `/chat`. A read‑only static surface is `rapp-static-mcp/1.0`.
 - **`5a-tether`** — **WebRTC** browser↔browser. A public broker (e.g. PeerJS) carries *signaling
   only* (SDP/ICE); data flows **DTLS‑encrypted peer‑to‑peer** — the broker never sees it.
 - **`5a-kite`** — the **kite/string**: an operator drives a vTwin's console via the Chrome
@@ -96,6 +104,18 @@ A *tether* is the live link between two neighbors. Transports are interchangeabl
 ---
 
 ## §6 — Twin‑chat
+
+> **On the sub‑part numbering.** §6 runs **§6a → §6b → §6e** on purpose: **§6e is a stable
+> citation anchor** (e.g. `RAPP/ECOSYSTEM_MAP.md` cites *NEIGHBORHOOD_PROTOCOL §6e* as the home of
+> `rapp-twin-chat-response/1.0`), so it is never renumbered in place. There is no §6c/§6d.
+>
+> **On‑relay form.** On a relay (local file, kited host, or cloud — §18), the §6 envelope rides
+> inside a **signed event wrapper**, `rapp-commons-event/1.0`: `{ schema:"rapp-commons-event/1.0",
+> from, pub, alg:"ecdsa-p256", ts, kind, body, sig }`, where `body` carries the §6 twin‑chat payload
+> and `sig` is an ECDSA‑P256 signature over the canonicalized event. This is the schema the
+> `rapp-vneighborhood/1.0` front‑door conformance (§18) requires on a relay; the seal (§8) still
+> applies to the body. The wrapper is the **signing/relay** layer; `rapp-twin-chat/1.0` is the
+> **payload** layer — same envelope, byte‑identical on local ≡ kited ≡ cloud.
 
 ### §6a — Envelope
 ```json
@@ -262,7 +282,8 @@ as `--twin <ws>`. [raw](https://raw.githubusercontent.com/kody-w/rapp-commons/ma
 
 **A public repo can be a *front door* to a neighborhood.** A neighborhood is *bones* (a
 `neighborhood.json` manifest: `name`, `focus`, `channel`, `kinds`, `rules`, `branding`, `sealed`,
-`addresses`) plus *content* (the signed §6 log on a relay). A **front door** is a public repo whose
+`addresses`) plus *content* (the signed §6 log on a relay — each entry wrapped in the
+`rapp-commons-event/1.0` signed event, §6). A **front door** is a public repo whose
 GitHub Pages site reads the bones and lets a twin step in — mint a key, **turn the lights on** (the first
 twin hosts and issues a **link + QR + PIN**), and others **scan + enter the PIN** to join a **sealed**
 (§8) channel, so even a public relay sees only ciphertext. Each front door can be **completely different**
