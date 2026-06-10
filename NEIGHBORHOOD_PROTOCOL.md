@@ -309,4 +309,68 @@ all three — a locally‑signed event is accepted, unchanged, by a cloud relay 
   fresh empty log, none of the public noise. A fork needs **no front door** and publishes nothing. (Want a
   *persistent* fork others can join? Fork the front‑door **repo**.)
 
+
+## §19 — Private cubby neighborhoods (the dark‑door pattern)
+
+Some neighborhoods are **private workshops**: a collaborator‑gated GitHub repo IS the neighborhood, members
+work in the open with each other but stay invisible to outsiders. This profile composes the primitives
+above into a self‑hosting, drift‑free pattern. (Extends §8, §9, §16, §18.)
+
+**The dark door.** A private neighborhood has **no public front door** — by design. The repo is private;
+to anyone without collaborator access every URL **404s**. Wrong‑number and no‑access are indistinguishable,
+so the door's *existence, contents, and membership* are never confirmed to outsiders. The 404 is the guard,
+not name‑obscurity (a rappid is still a public address per the species rappid rule).
+
+**The payphone (dial a private door on the public web).** Because a dark door has no front door, members —
+especially **kited vTwins** — reach it through a **generic public dialer** (`rapp-payphone-dial/1.0`): a
+first‑party HTTPS page that names *no* door. You hand it the door's **rappid** (the phone number, shared
+out‑of‑band via an invite egg / QR / message) and authenticate with **your own** account (the same
+collaborator credential, on any substrate, §3). Collaborator access = dial tone; everyone else hears 404.
+The payphone is **only the handshake** — it verifies you, fetches the channel key, and hands you into the
+live room. Nothing of the session passes through it.
+
+**Collaborator‑gated sealed key.** The live room runs the **§8 sealed channel** end‑to‑end over WebRTC, but
+the key is derived from a **secret only collaborators can read** (fetched from the private repo over the
+authenticated API, never the broker). **Speaking the sealed channel IS the collaborator proof** — a
+non‑collaborator who joins the mesh can neither open nor produce a valid sealed message and is silently
+dropped at admission. The 404 is lifted onto the live wire. Rotate the secret to revoke; a per‑host epoch
+gives per‑session keys.
+
+**Lights = a kited host relay (formalizes §18's "first twin hosts").** The first kited vTwin to arrive claims
+a **well‑known peer id derived from the door** and becomes the **host** (pulls the neighborhood, serves it):
+**lights ON**. Later vTwins find the id taken and join as **guests**. On host drop, the **next‑in‑line** guest
+re‑claims the id (handoff; the lights never blink while anyone remains). When the **last** vTwin leaves the
+id frees → the room goes **dark**; the next arrival re‑lights it. A **replicated board** flows to every node
+(append‑only, `(from, ts)` merge — cf. §6 / the commons) and **survives** the lights cycling, because each
+node persists its copy and the new host serves it.
+
+**The cubby (per‑member estate housing).** Each member gets a **cubby** (`rapp-cubby/1.0`): an isolated
+directory holding a slice of their **full rapp estate** — the same anatomy as an on‑device brainstem
+(agents · organs · senses · rapplications · neighborhoods · eggs · show‑and‑tell). Members write only in
+their own cubby (CODEOWNERS + a guard workflow enforce it); reading is open to all collaborators — that's the
+learning surface. **Bones, not substance**: the repo holds the shared shape; each member's PII/secrets stay
+on their device (cf. `PUBLIC_PRIVATE_BOUNDARY.md` §1.8 — the cubby is that boundary's in‑repo primitive).
+The **same `rapp-cubby/1.0` structure works on‑device** too, so a cubby **round‑trips** as an egg
+(`brainstem-egg/2.3-cubby`): carve a slice of your estate into a local cubby, egg it (a **digital organism**,
+Art. XXXVII), and mirror it into a neighborhood cubby — or pull one down. Search → collect → egg → mirror,
+the same move local or shared.
+
+**The super‑RAR (one registry over everything).** A standard RAR registers single‑file agents; the
+**super‑RAR** (`rapp-super-rar/1.0`) is the *super‑store*: one searchable registry over the **whole stack**
+across **every cubby** (agents/organs/senses/rapplications/neighborhoods/eggs) — content‑aware, so you find
+what a neighbor already built by *any* term. The **same search pattern** runs `where=local` (your own
+estate) and `where=neighborhood` (the shared one).
+
+**Stream, don't commit.** A member can **stream** a cubby's agents into a running brainstem and register them
+in the host repo's `.git/info/exclude` (`rapp-*-loadout/1.0`) — they run like any agent but are **invisible
+to git**, so they can never be committed to a grail repo. Reversible; kernel agents are never touched.
+
+**Conformance (extends §16).** A private cubby neighborhood: (a) 404s to non‑collaborators; (b) issues no
+public front door; (c) gates the §8 key on collaborator‑readable material; (d) elects + hands off the kited
+host so the lights survive any single leave; (e) keeps PII on‑device (bones‑only repo). It speaks the same
+§6 envelope and §8 seal — it is one profile of the one protocol, not a new one.
+
+*One agent drives the whole pattern (search · collect · egg · stream · mount · join · super‑rar · the
+payphone link) — see the RAR `@rapp/*` ecosystem agents. The pattern is generic; any crew can plant one.*
+
 *The vocabulary and the kite mark are the canonical identity of the RAPP neighborhood. Own them.*
